@@ -1,28 +1,23 @@
 class EstatesController < ApplicationController
   before_action :set_estate, only: [:show, :edit, :update, :destroy]
 
-  # GET /estates
-  # GET /estates.json
   def index
     @estates = Estate.all
   end
 
-  # GET /estates/1
-  # GET /estates/1.json
   def show
+    @stations = @estate.stations
   end
 
-  # GET /estates/new
   def new
     @estate = Estate.new
+    2.times { @estate.stations.build }
   end
 
-  # GET /estates/1/edit
   def edit
+    @estate.stations.build
   end
 
-  # POST /estates
-  # POST /estates.json
   def create
     @estate = Estate.new(estate_params)
 
@@ -37,8 +32,6 @@ class EstatesController < ApplicationController
     end
   end
 
-  # PATCH/PUT /estates/1
-  # PATCH/PUT /estates/1.json
   def update
     respond_to do |format|
       if @estate.update(estate_params)
@@ -51,8 +44,6 @@ class EstatesController < ApplicationController
     end
   end
 
-  # DELETE /estates/1
-  # DELETE /estates/1.json
   def destroy
     @estate.destroy
     respond_to do |format|
@@ -62,13 +53,11 @@ class EstatesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_estate
-      @estate = Estate.find(params[:id])
-    end
+  def set_estate
+    @estate = Estate.find(params[:id])
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def estate_params
-      params.require(:estate).permit(:name, :rent, :address, :age, :note)
-    end
+  def estate_params
+    params.require(:estate).permit(:name, :rent, :address, :age, :note, stations_attributes: [:id, :line, :name, :minute])
+  end
 end
